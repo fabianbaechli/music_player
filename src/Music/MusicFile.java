@@ -1,7 +1,5 @@
 package Music;
 
-import javafx.scene.media.Media;
-
 public class MusicFile {
     private double duration;
     private String name;
@@ -13,15 +11,15 @@ public class MusicFile {
         this.path = path;
     }
 
-    public double getDuration() {
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
+    double getDuration() {
         return duration;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getFile() {
-        return path;
     }
 }

@@ -1,13 +1,11 @@
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Music.MusicFile;
+import Music.MusicFolder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -17,15 +15,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Application implements ObserverPattern.Observer {
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
-    private static List<MusicFile> songs = new ArrayList<>();
+    private List<MusicFolder> musicFolder = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -46,8 +42,11 @@ public class Main extends Application {
                 // Displays a dialog, in which a folder can be chosen
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
-                Controller controller = new Controller();
-                System.out.println(controller.handleFolder(folder).describeFolder());
+                if (folder != null) {
+                    Controller controller = new Controller();
+                    controller.addObserver(this);
+                    musicFolder.add(controller.handleFolder(folder));
+                }
             });
             fileMenu.getItems().addAll(addFolderContent);
             if (os != null && os.startsWith("Mac"))
@@ -69,4 +68,14 @@ public class Main extends Application {
         }
     }
 
+    @Override
+    public void update(String name, double songLength) {
+        for (MusicFolder aMusicFolder : musicFolder) {
+            for (MusicFile aMusicFile : aMusicFolder.getFiles()) {
+                if (aMusicFile.getName().equals(name)) {
+                    aMusicFile.setDuration(songLength);
+                }
+            }
+        }
+    }
 }

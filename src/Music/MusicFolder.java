@@ -16,6 +16,18 @@ public class MusicFolder {
         this.folderName = folderName;
     }
 
+    public List<MusicFile> getFiles() {
+        return files;
+    }
+
+    public Image getFolderImage() {
+        return folderImage;
+    }
+
+    public String getFolderName() {
+        return folderName;
+    }
+
     public String describeFolder() {
         String listString = "";
         for (MusicFile s : files) {
