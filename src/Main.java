@@ -1,11 +1,13 @@
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Music.MusicFile;
-import Music.MusicFolder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +25,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
-    private static List<MusicFile> songs;
+    private static List<MusicFile> songs = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -48,11 +50,11 @@ public class Main extends Application {
                     // Iterates over the files in the folder
                     for (File aMusicFile : folder.listFiles()) {
                         int i = aMusicFile.getName().lastIndexOf('.');
-                        String extension = null;
+                        String extension = "";
                         if (i > 0) {
-                            extension = aMusicFile.getName().substring(i+1);
+                            extension = aMusicFile.getName().substring(i + 1);
                         }
-                        if (extension != null && extension.toLowerCase().equals("wav")) {
+                        if (!extension.equals("") && extension.toLowerCase().equals("wav")) {
                             Media media = new Media(Paths.get(aMusicFile.getAbsolutePath()).toUri().toString());
                             MediaPlayer mediaPlayer = new MediaPlayer(media);
                             mediaPlayer.setOnReady(() -> {
@@ -60,10 +62,12 @@ public class Main extends Application {
                                 MusicFile musicFile = new MusicFile(songDuration, aMusicFile.getName(), media);
                                 songs.add(musicFile);
                             });
-                        } else if (extension != null && (extension.toLowerCase().equals("jpeg") ||
-                                extension.equals("png")))
+                        } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
+                                extension.equals("png"))) {
+
+                        }
+                        writeToFile("henlo");
                     }
-                    MusicFolder musicFolder = new MusicFolder(page, )
                 }
             });
             fileMenu.getItems().addAll(addFolderContent);
@@ -103,5 +107,34 @@ public class Main extends Application {
             seconds -= 0.6;
         }
         return round(minutes + seconds, 2);
+    }
+
+    private void writeToFile(String text) {
+        text += "\n";
+        try {
+            File file = new File("user_folders.txt");
+            if (file.exists() && !file.isDirectory()) {         // Append, if the file exists
+                Files.write(Paths.get("user_folders.txt"),
+                        text.getBytes(), StandardOpenOption.APPEND);
+            } else {                                            // Create File if not
+                FileWriter fileWriter = new FileWriter(file);
+                fileWriter.write(text);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String readFileContent(String path) {
+        String text = "";
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+            while (bufferedReader.readLine() != null) {
+                text += bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text;
     }
 }
