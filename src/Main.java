@@ -42,33 +42,12 @@ public class Main extends Application {
             MenuItem addFolderContent = new MenuItem();
             addFolderContent.setText("Add Folder Content");
             addFolderContent.setOnAction((ActionEvent event) -> {
+
                 // Displays a dialog, in which a folder can be chosen
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
-
-                if (folder.listFiles() != null) {
-                    // Iterates over the files in the folder
-                    for (File aMusicFile : folder.listFiles()) {
-                        int i = aMusicFile.getName().lastIndexOf('.');
-                        String extension = "";
-                        if (i > 0) {
-                            extension = aMusicFile.getName().substring(i + 1);
-                        }
-                        if (!extension.equals("") && extension.toLowerCase().equals("wav")) {
-                            Media media = new Media(Paths.get(aMusicFile.getAbsolutePath()).toUri().toString());
-                            MediaPlayer mediaPlayer = new MediaPlayer(media);
-                            mediaPlayer.setOnReady(() -> {
-                                double songDuration = decimalToTime(media.getDuration().toMinutes());
-                                MusicFile musicFile = new MusicFile(songDuration, aMusicFile.getName(), media);
-                                songs.add(musicFile);
-                            });
-                        } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
-                                extension.equals("png"))) {
-
-                        }
-                        writeToFile("henlo");
-                    }
-                }
+                Controller controller = new Controller();
+                System.out.println(controller.handleFolder(folder).describeFolder());
             });
             fileMenu.getItems().addAll(addFolderContent);
             if (os != null && os.startsWith("Mac"))
@@ -90,51 +69,4 @@ public class Main extends Application {
         }
     }
 
-    private double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
-
-    private double decimalToTime(double decimalValueInMinutes) {
-        int minutes = (int) decimalValueInMinutes / 60;
-        double seconds = (decimalValueInMinutes - minutes) * 0.6;
-        while (seconds > 0.6) {
-            minutes += 1;
-            seconds -= 0.6;
-        }
-        return round(minutes + seconds, 2);
-    }
-
-    private void writeToFile(String text) {
-        text += "\n";
-        try {
-            File file = new File("user_folders.txt");
-            if (file.exists() && !file.isDirectory()) {         // Append, if the file exists
-                Files.write(Paths.get("user_folders.txt"),
-                        text.getBytes(), StandardOpenOption.APPEND);
-            } else {                                            // Create File if not
-                FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write(text);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String readFileContent(String path) {
-        String text = "";
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
-            while (bufferedReader.readLine() != null) {
-                text += bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return text;
-    }
 }
