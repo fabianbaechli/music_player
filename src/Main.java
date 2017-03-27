@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Music.MusicFile;
+import Music.MusicFolder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -39,17 +40,30 @@ public class Main extends Application {
             MenuItem addFolderContent = new MenuItem();
             addFolderContent.setText("Add Folder Content");
             addFolderContent.setOnAction((ActionEvent event) -> {
+                // Displays a dialog, in which a folder can be chosen
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
+
                 if (folder.listFiles() != null) {
+                    // Iterates over the files in the folder
                     for (File aMusicFile : folder.listFiles()) {
-                        Media media = new Media(Paths.get(aMusicFile.getAbsolutePath()).toUri().toString());
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-                        mediaPlayer.setOnReady(() -> {
-                            MusicFile musicFile = new MusicFile(decimalToTime(media.getDuration().toMinutes()), aMusicFile.getName(), media);
-                            songs.add(musicFile);
-                        });
+                        int i = aMusicFile.getName().lastIndexOf('.');
+                        String extension = null;
+                        if (i > 0) {
+                            extension = aMusicFile.getName().substring(i+1);
+                        }
+                        if (extension != null && extension.toLowerCase().equals("wav")) {
+                            Media media = new Media(Paths.get(aMusicFile.getAbsolutePath()).toUri().toString());
+                            MediaPlayer mediaPlayer = new MediaPlayer(media);
+                            mediaPlayer.setOnReady(() -> {
+                                double songDuration = decimalToTime(media.getDuration().toMinutes());
+                                MusicFile musicFile = new MusicFile(songDuration, aMusicFile.getName(), media);
+                                songs.add(musicFile);
+                            });
+                        } else if (extension != null && (extension.toLowerCase().equals("jpeg") ||
+                                extension.equals("png")))
                     }
+                    MusicFolder musicFolder = new MusicFolder(page, )
                 }
             });
             fileMenu.getItems().addAll(addFolderContent);
@@ -81,7 +95,6 @@ public class Main extends Application {
         return (double) tmp / factor;
     }
 
-    // TODO: Change name
     private double decimalToTime(double decimalValueInMinutes) {
         int minutes = (int) decimalValueInMinutes / 60;
         double seconds = (decimalValueInMinutes - minutes) * 0.6;
