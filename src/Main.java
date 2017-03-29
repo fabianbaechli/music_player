@@ -22,6 +22,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
     private List<MusicFolder> musicFolder = new ArrayList<>();
+    Controller controller = new Controller();
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -43,11 +44,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
                 if (folder != null) {
-                    Controller controller = new Controller();
-                    controller.addObserver(this);
                     musicFolder.add(controller.handleFolder(folder));
+                    controller.writeToUserFolder(folder.getAbsolutePath());
                 }
             });
+            
             fileMenu.getItems().addAll(addFolderContent);
             if (os != null && os.startsWith("Mac"))
                 menuBar.useSystemMenuBarProperty().set(true);
@@ -55,7 +56,10 @@ public class Main extends Application implements ObserverPattern.Observer {
             menuBar.getMenus().addAll(fileMenu, optionsMenu, helpMenu);
             BorderPane borderPane = new BorderPane();
             borderPane.setTop(menuBar);
-
+            controller.addObserver(this);
+            Thread t = new Thread(() -> musicFolder = controller.getContentFromUserFile());
+            t.setDaemon(true);
+            t.start();
             page = FXMLLoader.load(Main.class.getResource("/graphic_interface/mainWindow.fxml"));
             page.getChildren().add(borderPane);
             Scene scene = new Scene(page);
@@ -74,6 +78,7 @@ public class Main extends Application implements ObserverPattern.Observer {
             for (MusicFile aMusicFile : aMusicFolder.getFiles()) {
                 if (aMusicFile.getName().equals(name)) {
                     aMusicFile.setDuration(songLength);
+                    System.out.println("set duration for track :" + aMusicFile.getName() + " to: " + songLength);
                 }
             }
         }
