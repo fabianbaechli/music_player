@@ -39,7 +39,6 @@ public class Main extends Application implements ObserverPattern.Observer {
             MenuItem addFolderContent = new MenuItem();
             addFolderContent.setText("Add Folder Content");
             addFolderContent.setOnAction((ActionEvent event) -> {
-
                 // Displays a dialog, in which a folder can be chosen
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
@@ -48,7 +47,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                     controller.writeToUserFolder(folder.getAbsolutePath());
                 }
             });
-            
+
             fileMenu.getItems().addAll(addFolderContent);
             if (os != null && os.startsWith("Mac"))
                 menuBar.useSystemMenuBarProperty().set(true);
@@ -65,7 +64,7 @@ public class Main extends Application implements ObserverPattern.Observer {
             Scene scene = new Scene(page);
 
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Login");
+            primaryStage.setTitle("Music Player");
             primaryStage.show();
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

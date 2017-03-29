@@ -36,7 +36,6 @@ class Controller implements Subject {
                         MusicFile musicFile = new MusicFile(songDuration, fileFromFolder.getName(), fileFromFolder.getPath());
                         songs.add(musicFile);
                         notifyObserver(musicFile.getName(), songDuration);
-                        System.out.println("notified observers for song:" + musicFile.getName());
                     });
                     // If its an image
                 } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
