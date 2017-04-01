@@ -33,6 +33,6 @@ public class MusicFolder {
         for (MusicFile s : files) {
             listString += "\u0009" + s.getName() + " : " + s.getDuration() + "\n";
         }
-        return "This folder has the name " + folderName + "\n" + "it contains these music files:" + "\n" + listString;
+        return folderName + "\n" + "it contains these music files:" + "\n" + listString;
     }
 }

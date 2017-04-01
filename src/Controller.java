@@ -43,26 +43,25 @@ class Controller implements Subject {
                     image = new Image(fileFromFolder.getAbsolutePath());
                 }
             }
-
             musicFolder = new MusicFolder(songs, image, folderName);
+            notifyObserver(musicFolder);
             return musicFolder;
         }
         return null;
     }
 
-    public void writeToUserFolder(String text) {
+    void writeToUserFolder(String text) {
         model.writeToFile(text);
     }
 
-    public List<MusicFolder> getContentFromUserFile() {
-        List<MusicFolder> folder = new ArrayList<>();
+    void getContentFromUserFile() {
         Model model = new Model("user_folders.txt");
         String[] userFileContent = model.readUserFileContent().split("\n");
         for (String aMusicFolder : userFileContent) {
+            System.out.println("parsing folder " + aMusicFolder + " from user config file");
             File file = new File(aMusicFolder);
-            folder.add(handleFolder(file));
+            handleFolder(file);
         }
-        return folder;
     }
 
     private double round(double value) {
@@ -104,6 +103,13 @@ class Controller implements Subject {
     public void notifyObserver(String name, double songLength) {
         for (Observer observerToNotify : observers) {
             observerToNotify.update(name, songLength);
+        }
+    }
+
+    @Override
+    public void notifyObserver(MusicFolder musicFolder) {
+        for (Observer observerToNotify : observers) {
+            observerToNotify.update(musicFolder);
         }
     }
 }

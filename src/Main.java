@@ -6,23 +6,29 @@ import java.util.logging.Logger;
 
 import Music.MusicFile;
 import Music.MusicFolder;
+import com.sun.jmx.snmp.internal.SnmpSubSystem;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class Main extends Application implements ObserverPattern.Observer {
+    private int scroll = 0;
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
     private List<MusicFolder> musicFolder = new ArrayList<>();
-    Controller controller = new Controller();
+    private Controller controller = new Controller();
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -56,9 +62,7 @@ public class Main extends Application implements ObserverPattern.Observer {
             BorderPane borderPane = new BorderPane();
             borderPane.setTop(menuBar);
             controller.addObserver(this);
-            Thread t = new Thread(() -> musicFolder = controller.getContentFromUserFile());
-            t.setDaemon(true);
-            t.start();
+
             page = FXMLLoader.load(Main.class.getResource("/graphic_interface/mainWindow.fxml"));
             page.getChildren().add(borderPane);
             Scene scene = new Scene(page);
@@ -66,6 +70,9 @@ public class Main extends Application implements ObserverPattern.Observer {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Music Player");
             primaryStage.show();
+            Thread t = new Thread(() -> controller.getContentFromUserFile());
+            t.setDaemon(true);
+            t.start();
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -77,9 +84,27 @@ public class Main extends Application implements ObserverPattern.Observer {
             for (MusicFile aMusicFile : aMusicFolder.getFiles()) {
                 if (aMusicFile.getName().equals(name)) {
                     aMusicFile.setDuration(songLength);
-                    System.out.println("set duration for track :" + aMusicFile.getName() + " to: " + songLength);
                 }
             }
         }
+    }
+
+    @Override
+    public void update(MusicFolder newFolder) {
+        musicFolder.add(newFolder);
+        // Appends a new album to the collection
+        Thread thread = new Thread(() -> Platform.runLater(() -> {
+            try {
+                StackPane pane = FXMLLoader.load(Main.class.getResource("/graphic_interface/entry.fxml"));
+                AnchorPane anchorPane = (AnchorPane) pane.getChildren().get(0);
+                anchorPane.setLayoutY(scroll);
+                ((AnchorPane) ((ScrollPane) page.getChildren().get(0)).getContent()).getChildren().add(anchorPane);
+                scroll += 200;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+        thread.setDaemon(true);
+        thread.start();
     }
 }
