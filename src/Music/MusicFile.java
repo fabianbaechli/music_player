@@ -15,7 +15,7 @@ public class MusicFile {
         this.duration = duration;
     }
 
-    double getDuration() {
+    public double getDuration() {
         return duration;
     }
 
