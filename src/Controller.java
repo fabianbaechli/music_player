@@ -45,6 +45,7 @@ class Controller implements Subject {
             }
             musicFolder = new MusicFolder(songs, image, folderName);
             notifyObserver(musicFolder);
+            System.out.println("sent " + musicFolder.describeFolder());
             return musicFolder;
         }
         return null;

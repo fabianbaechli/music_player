@@ -98,10 +98,8 @@ public class Main extends Application implements ObserverPattern.Observer {
             try {
                 StackPane pane = FXMLLoader.load(Main.class.getResource("/graphic_interface/entry.fxml"));
                 AnchorPane anchorPane = (AnchorPane) pane.getChildren().get(0);
-                System.out.println(anchorPane.getHeight());
                 anchorPane.setLayoutY(scroll);
                 ((AnchorPane) ((ScrollPane) page.getChildren().get(1)).getContent()).getChildren().add(anchorPane);
-                System.out.println(anchorPane.getChildren());
                 GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
                 for (MusicFile aMusicFile : newFolder.getFiles()) {
                     Label name = new Label(aMusicFile.getName());
@@ -111,6 +109,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                     songGrid.addRow(count[0], name);
                     songGrid.addRow(count[0], album);
                     songGrid.addRow(count[0], duration);
+                    songGrid.getChildren().get(count[0]).setOnMouseClicked(event -> System.out.println("boi"));
                     count[0] += 1;
                 }
                 scroll += (count[0] * 18) + 40;
