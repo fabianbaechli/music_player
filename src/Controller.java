@@ -46,7 +46,7 @@ class Controller implements Subject {
                     runnable = new Thread(() -> {
                         musicFilesParsed[0] += 1;
                         double songDuration = decimalToTime(media.getDuration().toMinutes());
-                        MusicFile musicFile = new MusicFile(songDuration, fileFromFolder.getName(), fileFromFolder.getPath());
+                        MusicFile musicFile = new MusicFile(songDuration, fileFromFolder.getName(), fileFromFolder.getPath(), mediaPlayer);
                         songs.add(musicFile);
 
                         // ensures that every song is loaded
