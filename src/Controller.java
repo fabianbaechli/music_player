@@ -15,27 +15,44 @@ class Controller implements Subject {
     private Model model = new Model("user_folders.txt");
     private ArrayList<Observer> observers = new ArrayList<>();
 
-    MusicFolder handleFolder(File folder) {
+    void handleFolder(File folder) {
+        int musicFilesParsed = 0;
         List<MusicFile> songs = new ArrayList<>();
-        MusicFolder musicFolder;
+        final MusicFolder[] musicFolder = new MusicFolder[1];
         Image image = null;
         String folderName = folder.getName();
 
         if (folder.listFiles() != null) {
             // Iterates over the files in the folder
             // noinspection ConstantConditions
+            int musicFiles = 0;
+            for (File fileFromFolder : folder.listFiles()) {
+                String extension = getExtension(fileFromFolder.getName());
+                if (extension.toLowerCase().equals("wav")) {
+                    musicFiles ++;
+                }
+            }
             for (File fileFromFolder : folder.listFiles()) {
                 // Gets the ending of the file
                 String extension = getExtension(fileFromFolder.getName());
                 // If it's a music file
-                if (!extension.equals("") && extension.toLowerCase().equals("wav")) {
+                if (extension.toLowerCase().equals("wav")) {
                     Media media = new Media(Paths.get(fileFromFolder.getAbsolutePath()).toUri().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    int finalMusicFiles = musicFiles;
+                    Image finalImage = image;
                     mediaPlayer.setOnReady(() -> {
+                        final int musicFilesParsedCopy = musicFilesParsed + 1;
                         double songDuration = decimalToTime(media.getDuration().toMinutes());
                         MusicFile musicFile = new MusicFile(songDuration, fileFromFolder.getName(), fileFromFolder.getPath());
                         songs.add(musicFile);
-                        notifyObserver(musicFile.getName(), songDuration);
+                        System.out.println(musicFile.getName() + " ready");
+
+                        System.out.println(musicFilesParsedCopy);
+                        if (musicFilesParsedCopy == finalMusicFiles) {
+                            musicFolder[0] = new MusicFolder(songs, finalImage, folderName);
+                            notifyObserver(musicFolder[0]);
+                        }
                     });
                     // If its an image
                 } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
@@ -43,12 +60,7 @@ class Controller implements Subject {
                     image = new Image(fileFromFolder.getAbsolutePath());
                 }
             }
-            musicFolder = new MusicFolder(songs, image, folderName);
-            notifyObserver(musicFolder);
-            System.out.println("sent " + musicFolder.describeFolder());
-            return musicFolder;
         }
-        return null;
     }
 
     void writeToUserFolder(String text) {
@@ -99,12 +111,6 @@ class Controller implements Subject {
         int observerIndex = observers.indexOf(observerToDelete);
         observers.remove(observerToDelete);
         System.out.println("Observer " + (observerIndex - 1) + " deleted");
-    }
-
-    public void notifyObserver(String name, double songLength) {
-        for (Observer observerToNotify : observers) {
-            observerToNotify.update(name, songLength);
-        }
     }
 
     @Override

@@ -20,6 +20,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class Main extends Application implements ObserverPattern.Observer {
+    /*
+    TODO:   - Fix Bug, which stops all songs from loading
+    TODO:   - Implement Song Playing view + Play Song on click
+     */
     private int scroll = 0;
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
@@ -45,7 +49,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 File folder = directoryChooser.showDialog(primaryStage);
                 if (folder != null) {
-                    Thread thread = new Thread(() -> musicFolder.add(controller.handleFolder(folder)));
+                    Thread thread = new Thread(() -> controller.handleFolder(folder));
                     thread.setDaemon(true);
                     thread.start();
                     controller.writeToUserFolder(folder.getAbsolutePath());
@@ -78,21 +82,10 @@ public class Main extends Application implements ObserverPattern.Observer {
         }
     }
 
-    @Override
-    public void update(String name, double songLength) {
-        for (MusicFolder aMusicFolder : musicFolder) {
-            for (MusicFile aMusicFile : aMusicFolder.getFiles()) {
-                if (aMusicFile.getName().equals(name)) {
-                    aMusicFile.setDuration(songLength);
-                }
-            }
-        }
-    }
-
-    @Override
     public void update(MusicFolder newFolder) {
-        final int[] count = {1};
+        System.out.println("got folder :" + newFolder.describeFolder());
         musicFolder.add(newFolder);
+        final int[] count = {1};
         // Appends a new album to the collection
         Thread thread = new Thread(() -> Platform.runLater(() -> {
             try {
@@ -106,11 +99,15 @@ public class Main extends Application implements ObserverPattern.Observer {
                     Label album = new Label(newFolder.getFolderName());
                     Label duration = new Label(Double.toString(aMusicFile.getDuration()));
 
-                    songGrid.addRow(count[0], name);
-                    songGrid.addRow(count[0], album);
-                    songGrid.addRow(count[0], duration);
-                    songGrid.getChildren().get(count[0]).setOnMouseClicked(event -> System.out.println("boi"));
+                    songGrid.add(name, 0, count[0]);
+                    songGrid.add(album, 1, count[0]);
+                    songGrid.add(duration, 2, count[0]);
                     count[0] += 1;
+                }
+                for (int i = 0; i < songGrid.getChildren().size(); i++) {
+                    songGrid.getChildren().get(i).setOnMouseClicked(event -> {
+
+                    });
                 }
                 scroll += (count[0] * 18) + 40;
             } catch (Exception e) {
