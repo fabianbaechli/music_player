@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,8 +19,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.scene.media.Media;
+
 
 public class Main extends Application implements ObserverPattern.Observer {
     /*
@@ -107,12 +111,26 @@ public class Main extends Application implements ObserverPattern.Observer {
                     songGrid.add(name, 0, count[0]);
                     songGrid.add(album, 1, count[0]);
                     songGrid.add(duration, 2, count[0]);
+                    songGrid.getChildren().get(count[0]).setId(aMusicFile.getPath());
                     count[0] += 1;
                 }
-                for (int i = 0; i < songGrid.getChildren().size(); i++) {
-                    songGrid.getChildren().get(i).setOnMouseClicked(event -> {
+                for (int i = 0; i < songGrid.getChildren().size(); i+= 1) {
+                    ((Label)songGrid.getChildren().get(i)).setPrefWidth(250);
+                    ((Label)songGrid.getChildren().get(i)).setPrefHeight(250);
+                    songGrid.getChildren().get(i).setStyle("-fx-background-color: #CFD8DC");
 
+                    int finalI = i;
+                    Runnable t = new Thread(() -> {
+                        for (MusicFile aMusicFile : newFolder.getFiles()) {
+                            if (aMusicFile.getPath().equals(songGrid.getChildren().get(finalI).getId())) {
+                                Media media = new Media(Paths.get(aMusicFile.getPath()).toUri().toString());
+                                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                                mediaPlayer.setOnReady(mediaPlayer::play);
+                            }
+                        }
                     });
+                    int finalI1 = i;
+                    songGrid.getChildren().get(i).setOnMouseClicked(event -> System.out.println(songGrid.getChildren().get(finalI1).getId()));
                 }
                 scroll += (count[0] * 18) + 40;
             } catch (Exception e) {

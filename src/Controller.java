@@ -30,6 +30,8 @@ class Controller implements Subject {
                 String extension = getExtension(fileFromFolder.getName());
                 if (extension.toLowerCase().equals("wav")) {
                     musicFiles[0] += 1;
+                } else if (extension.toLowerCase().equals("png") || extension.toLowerCase().equals("jpg")) {
+                    image = fileFromFolder.getAbsolutePath();
                 }
             }
 
@@ -62,10 +64,6 @@ class Controller implements Subject {
                     }
                     mediaPlayer.setOnReady(runnable);
                     // If its an image
-                } else if (!extension.equals("") && (extension.toLowerCase().equals("jpg") ||
-                        extension.equals("png"))) {
-                    image = fileFromFolder.getAbsolutePath();
-                    System.out.println(image);
                 }
             }
         }
