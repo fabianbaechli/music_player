@@ -16,22 +16,24 @@ class Controller implements Subject {
     private ArrayList<Observer> observers = new ArrayList<>();
 
     void handleFolder(File folder) {
-        int musicFilesParsed = 0;
+        int[] musicFilesParsed = {0};
+        int[] musicFiles = {0};
         List<MusicFile> songs = new ArrayList<>();
         final MusicFolder[] musicFolder = new MusicFolder[1];
         Image image = null;
         String folderName = folder.getName();
+        Thread runnable = null;
 
         if (folder.listFiles() != null) {
             // Iterates over the files in the folder
             // noinspection ConstantConditions
-            int musicFiles = 0;
             for (File fileFromFolder : folder.listFiles()) {
                 String extension = getExtension(fileFromFolder.getName());
                 if (extension.toLowerCase().equals("wav")) {
-                    musicFiles ++;
+                    musicFiles[0] += 1;
                 }
             }
+
             for (File fileFromFolder : folder.listFiles()) {
                 // Gets the ending of the file
                 String extension = getExtension(fileFromFolder.getName());
@@ -39,21 +41,27 @@ class Controller implements Subject {
                 if (extension.toLowerCase().equals("wav")) {
                     Media media = new Media(Paths.get(fileFromFolder.getAbsolutePath()).toUri().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    int finalMusicFiles = musicFiles;
                     Image finalImage = image;
-                    mediaPlayer.setOnReady(() -> {
-                        final int musicFilesParsedCopy = musicFilesParsed + 1;
+                    runnable = new Thread(() -> {
+                        musicFilesParsed[0] += 1;
                         double songDuration = decimalToTime(media.getDuration().toMinutes());
                         MusicFile musicFile = new MusicFile(songDuration, fileFromFolder.getName(), fileFromFolder.getPath());
                         songs.add(musicFile);
-                        System.out.println(musicFile.getName() + " ready");
 
-                        System.out.println(musicFilesParsedCopy);
-                        if (musicFilesParsedCopy == finalMusicFiles) {
+                        // ensures that every song is loaded
+                        if (musicFilesParsed[0] == musicFiles[0]) {
                             musicFolder[0] = new MusicFolder(songs, finalImage, folderName);
                             notifyObserver(musicFolder[0]);
                         }
                     });
+                    runnable.setDaemon(true);
+                    try {
+                        // so that the method does not exit before all songs are loaded
+                        runnable.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mediaPlayer.setOnReady(runnable);
                     // If its an image
                 } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
                         extension.equals("png"))) {
