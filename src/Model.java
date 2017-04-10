@@ -11,7 +11,7 @@ class Model {
     }
 
     void writeToFile(String text) {
-        text += "\n";
+        text = "\n" + text;
         try {
             File file = new File(fileLocation);
             if (file.exists() && !file.isDirectory()) {         // Append, if the file exists

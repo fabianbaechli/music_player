@@ -7,12 +7,12 @@ import java.util.List;
 
 public class MusicFolder {
     List<MusicFile> files;
-    Image folderImage;
+    String imagePath;
     String folderName;
 
-    public MusicFolder(List<MusicFile> files, Image folderImage, String folderName) {
+    public MusicFolder(List<MusicFile> files, String imagePath, String folderName) {
         this.files = files;
-        this.folderImage = folderImage;
+        this.imagePath = imagePath;
         this.folderName = folderName;
     }
 
@@ -20,8 +20,8 @@ public class MusicFolder {
         return files;
     }
 
-    public Image getFolderImage() {
-        return folderImage;
+    public String getFolderImage() {
+        return imagePath;
     }
 
     public String getFolderName() {

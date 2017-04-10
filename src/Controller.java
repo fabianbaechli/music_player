@@ -2,7 +2,6 @@ import Music.MusicFile;
 import Music.MusicFolder;
 import ObserverPattern.Observer;
 import ObserverPattern.Subject;
-import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -16,13 +15,13 @@ class Controller implements Subject {
     private ArrayList<Observer> observers = new ArrayList<>();
 
     void handleFolder(File folder) {
-        int[] musicFilesParsed = {0};
-        int[] musicFiles = {0};
-        List<MusicFile> songs = new ArrayList<>();
+        int[] musicFilesParsed          = {0};
+        int[] musicFiles                = {0};
+        List<MusicFile> songs           = new ArrayList<>();
         final MusicFolder[] musicFolder = new MusicFolder[1];
-        Image image = null;
-        String folderName = folder.getName();
-        Thread runnable = null;
+        String image                    = null;
+        String folderName               = folder.getName();
+        Thread runnable                 = null;
 
         if (folder.listFiles() != null) {
             // Iterates over the files in the folder
@@ -41,7 +40,7 @@ class Controller implements Subject {
                 if (extension.toLowerCase().equals("wav")) {
                     Media media = new Media(Paths.get(fileFromFolder.getAbsolutePath()).toUri().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    Image finalImage = image;
+                    String finalImage = image;
                     runnable = new Thread(() -> {
                         musicFilesParsed[0] += 1;
                         double songDuration = decimalToTime(media.getDuration().toMinutes());
@@ -50,22 +49,23 @@ class Controller implements Subject {
 
                         // ensures that every song is loaded
                         if (musicFilesParsed[0] == musicFiles[0]) {
-                            musicFolder[0] = new MusicFolder(songs, finalImage, folderName);
+                            musicFolder[0] = new MusicFolder(songs, Paths.get(finalImage).toUri().toString(), folderName);
                             notifyObserver(musicFolder[0]);
                         }
                     });
-                    runnable.setDaemon(true);
                     try {
                         // so that the method does not exit before all songs are loaded
+                        runnable.setDaemon(true);
                         runnable.join();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     mediaPlayer.setOnReady(runnable);
                     // If its an image
-                } else if (!extension.equals("") && (extension.toLowerCase().equals("jpeg") ||
+                } else if (!extension.equals("") && (extension.toLowerCase().equals("jpg") ||
                         extension.equals("png"))) {
-                    image = new Image(fileFromFolder.getAbsolutePath());
+                    image = fileFromFolder.getAbsolutePath();
+                    System.out.println(image);
                 }
             }
         }

@@ -12,6 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -21,8 +23,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application implements ObserverPattern.Observer {
     /*
-    TODO:   - Fix Bug, which stops all songs from loading
-    TODO:   - Implement Song Playing view + Play Song on click
+    TODO:   - Fix Bug, which stops all songs from loading           [x]
+    TODO:   - Implement Song Playing view + Play Song on click      []
      */
     private int scroll = 0;
     private static final String os = System.getProperty("os.name");
@@ -94,6 +96,9 @@ public class Main extends Application implements ObserverPattern.Observer {
                 anchorPane.setLayoutY(scroll);
                 ((AnchorPane) ((ScrollPane) page.getChildren().get(1)).getContent()).getChildren().add(anchorPane);
                 GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
+                ImageView imageView = (ImageView) anchorPane.getChildren().get(0);
+
+                imageView.setImage(new Image(newFolder.getFolderImage()));
                 for (MusicFile aMusicFile : newFolder.getFiles()) {
                     Label name = new Label(aMusicFile.getName());
                     Label album = new Label(newFolder.getFolderName());
