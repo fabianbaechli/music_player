@@ -15,8 +15,7 @@ class Model {
         try {
             File file = new File(fileLocation);
             if (file.exists() && !file.isDirectory()) {         // Append, if the file exists
-                Files.write(Paths.get("user_folders.txt"),
-                        text.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get(fileLocation), text.getBytes(), StandardOpenOption.APPEND);
             } else {                                            // Create File if not
                 FileWriter fileWriter = new FileWriter(file);
                 fileWriter.write(text);
