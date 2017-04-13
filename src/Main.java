@@ -166,17 +166,15 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 ProgressBar finalProgressBar = progressBar;
                                 progressBarTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                                     double currentSongLength = aMusicFile.getDuration();
-                                    double currentSongposition = controller.decimalToTime(currentSong.getCurrentTime().toMinutes());
-                                    ((Label) finalSongPane.getChildren().get(4)).setText(Double.toString(currentSongposition));
+                                    double currentSongPosition = controller.decimalToTime(currentSong.getCurrentTime().toMinutes());
+                                    assert finalSongPane != null;
+                                    ((Label) finalSongPane.getChildren().get(4)).setText(Double.toString(currentSongPosition));
                                     ((Label) finalSongPane.getChildren().get(5)).setText(Double.toString(currentSongLength));
-                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(currentSongposition, currentSongLength));
+                                    assert finalProgressBar != null;
+                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(currentSongPosition, currentSongLength));
                                 }));
                                 progressBarTimeline.setCycleCount(-1);
                                 progressBarTimeline.play();
-
-                                // System.out.println(controller.songProgressOnProgressBar(controller.decimalToTime(currentSong.getCurrentTime().toSeconds()), aMusicFile.getDuration()));
-                                // finalProgressBar.setProgress(controller.songProgressOnProgressBar(controller.decimalToTime(currentSong.getCurrentTime().toSeconds()), aMusicFile.getDuration()));
-
                             }
                         }
                     });
