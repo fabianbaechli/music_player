@@ -51,6 +51,7 @@ class Controller implements Subject {
 
                         // ensures that every song is loaded
                         if (musicFilesParsed[0] == musicFiles[0]) {
+                            assert finalImage != null;
                             musicFolder[0] = new MusicFolder(songs, Paths.get(finalImage).toUri().toString(), folderName);
                             notifyObserver(musicFolder[0]);
                         }
@@ -89,7 +90,7 @@ class Controller implements Subject {
         return (double) tmp / factor;
     }
 
-    public double decimalToTime(double decimalValueInMinutes) {
+    double decimalToTime(double decimalValueInMinutes) {
         int minutes = (int) decimalValueInMinutes / 60;
         double seconds = (decimalValueInMinutes - minutes) * 0.6;
         while (seconds > 0.6) {
@@ -108,7 +109,7 @@ class Controller implements Subject {
         return extension;
     }
 
-    public float songProgressOnProgressBar(double songPlayed, double songLength) {
+    float songProgressOnProgressBar(double songPlayed, double songLength) {
         // minutes
         int songPlayedSeconds = (int) songPlayed;
         // seconds (already in time format)
@@ -119,7 +120,7 @@ class Controller implements Subject {
         temp = (songLength - songLengthSeconds) * 100;
         songLengthSeconds = (songLengthSeconds * 60) + (int) temp;
 
-        return (float)songPlayedSeconds / (float)songLengthSeconds;
+        return (float) songPlayedSeconds / (float) songLengthSeconds;
     }
 
     public void addObserver(Observer newObserver) {

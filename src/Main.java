@@ -22,9 +22,6 @@ import com.jfoenix.controls.*;
 import javafx.util.Duration;
 
 public class Main extends Application implements ObserverPattern.Observer {
-    /*
-    TODO:   - Implement Song Playing view + Play Song on click
-     */
     private int scroll = 0;
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
@@ -97,7 +94,6 @@ public class Main extends Application implements ObserverPattern.Observer {
 
                 BorderPane groundBorderPane = (BorderPane) page.getChildren().get(1);
                 ScrollPane groundScrollPane = (ScrollPane) groundBorderPane.getCenter();
-                groundScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 AnchorPane groundAnchorPane = (AnchorPane) groundScrollPane.getContent();
                 groundAnchorPane.getChildren().add(anchorPane);
 
@@ -122,8 +118,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                     songGrid.add(duration, 2, count[0]);
 
                     songGrid.getChildren().get(rowCounter[0]).setId(aMusicFile.getPath());
+                    songGrid.getChildren().get(rowCounter[0]).setStyle("-fx-font-family: Roboto");
                     songGrid.getChildren().get(rowCounter[0] + 1).setId(aMusicFile.getPath());
+                    songGrid.getChildren().get(rowCounter[0] + 1).setStyle("-fx-font-family: Roboto");
                     songGrid.getChildren().get(rowCounter[0] + 2).setId(aMusicFile.getPath());
+                    songGrid.getChildren().get(rowCounter[0] + 2).setStyle("-fx-font-family: Roboto");
                     rowCounter[0] += 3;
                     count[0] += 1;
                 }
@@ -149,8 +148,8 @@ public class Main extends Application implements ObserverPattern.Observer {
                                     progressBar = (JFXProgressBar) songAnchorPane.getChildren().get(3);
 
                                     songCover.setImage(imageView.getImage());
-                                    songTitle.setText(aMusicFile.getName());
-                                    songAlbum.setText(newFolder.getFolderName());
+                                    songTitle.setText("Title: " + aMusicFile.getName());
+                                    songAlbum.setText("Album: " + newFolder.getFolderName());
                                     groundBorderPane.setBottom(songPane);
 
                                 } catch (IOException e) {
@@ -180,7 +179,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                     });
                     songGrid.getChildren().get(i).setOnMouseClicked(event -> t.run());
                 }
-                scroll += (count[0] * 18) + 40;
+                scroll += (count[0] * 21) + 40;
             } catch (Exception e) {
                 e.printStackTrace();
             }

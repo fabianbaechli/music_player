@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -11,11 +12,25 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="17.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-            <Label layoutX="489.0" layoutY="20.0" prefHeight="17.0" prefWidth="286.0" text="Title" />
-            <Label layoutX="489.0" layoutY="41.0" prefHeight="17.0" prefWidth="286.0" text="Album" />
+            <Label layoutX="489.0" layoutY="20.0" prefHeight="17.0" prefWidth="286.0" text="Title: ">
+               <font>
+                  <Font name="Roboto Light" size="13.0" />
+               </font></Label>
+            <Label layoutX="489.0" layoutY="41.0" prefHeight="17.0" prefWidth="286.0" text="Album: ">
+               <font>
+                  <Font name="Roboto Light" size="13.0" />
+               </font></Label>
             <JFXProgressBar layoutX="185.0" layoutY="81.0" prefHeight="10.0" prefWidth="400.0" progress="0.0" />
-            <Label layoutX="139.0" layoutY="74.0" />
-            <Label layoutX="605.0" layoutY="74.0" />
+            <Label layoutX="139.0" layoutY="74.0">
+               <font>
+                  <Font name="Roboto Light" size="13.0" />
+               </font>
+            </Label>
+            <Label layoutX="605.0" layoutY="74.0">
+               <font>
+                  <Font name="Roboto Light" size="13.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>
