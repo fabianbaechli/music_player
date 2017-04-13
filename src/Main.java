@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import Music.MusicFile;
 import Music.MusicFolder;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,6 +19,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import com.jfoenix.controls.*;
+import javafx.util.Duration;
 
 public class Main extends Application implements ObserverPattern.Observer {
     /*
@@ -27,6 +30,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     private static StackPane page;
     private Controller controller = new Controller();
     private MediaPlayer currentSong = null;
+    private Timeline progressBarTimeline = null;
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -106,7 +110,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                     Label album = new Label(newFolder.getFolderName());
                     String durationStr = Double.toString(aMusicFile.getDuration());
                     Label duration = new Label();
-                    // Label duration = new Label(Double.toString(aMusicFile.getDuration()));
+
                     if (durationStr.split("\\.")[1].length() == 1) {
                         duration.setText(durationStr + "0");
                     } else {
@@ -134,15 +138,16 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 if (currentSong != null) {
                                     currentSong.stop();
                                 }
-
+                                AnchorPane songAnchorPane = null;
+                                ProgressBar progressBar = null;
                                 try {
                                     StackPane songPane = FXMLLoader.load(Main.class.getResource("/graphic_interface/songPlaying.fxml"));
-                                    AnchorPane songAnchorPane = (AnchorPane) songPane.getChildren().get(0);
+                                    songAnchorPane = (AnchorPane) songPane.getChildren().get(0);
                                     ImageView songCover = (ImageView) songAnchorPane.getChildren().get(0);
                                     Label songTitle = (Label) songAnchorPane.getChildren().get(1);
                                     Label songAlbum = (Label) songAnchorPane.getChildren().get(2);
-                                    JFXProgressBar progressBar = (JFXProgressBar) songAnchorPane.getChildren().get(3);
-                                    
+                                    progressBar = (JFXProgressBar) songAnchorPane.getChildren().get(3);
+
                                     songCover.setImage(imageView.getImage());
                                     songTitle.setText(aMusicFile.getName());
                                     songAlbum.setText(newFolder.getFolderName());
@@ -154,6 +159,24 @@ public class Main extends Application implements ObserverPattern.Observer {
 
                                 currentSong = aMusicFile.getPlayer();
                                 currentSong.play();
+                                if (progressBarTimeline != null) {
+                                    progressBarTimeline.stop();
+                                }
+                                AnchorPane finalSongPane = songAnchorPane;
+                                ProgressBar finalProgressBar = progressBar;
+                                progressBarTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                                    double currentSongLength = aMusicFile.getDuration();
+                                    double currentSongposition = controller.decimalToTime(currentSong.getCurrentTime().toMinutes());
+                                    ((Label) finalSongPane.getChildren().get(4)).setText(Double.toString(currentSongposition));
+                                    ((Label) finalSongPane.getChildren().get(5)).setText(Double.toString(currentSongLength));
+                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(currentSongposition, currentSongLength));
+                                }));
+                                progressBarTimeline.setCycleCount(-1);
+                                progressBarTimeline.play();
+
+                                // System.out.println(controller.songProgressOnProgressBar(controller.decimalToTime(currentSong.getCurrentTime().toSeconds()), aMusicFile.getDuration()));
+                                // finalProgressBar.setProgress(controller.songProgressOnProgressBar(controller.decimalToTime(currentSong.getCurrentTime().toSeconds()), aMusicFile.getDuration()));
+
                             }
                         }
                     });

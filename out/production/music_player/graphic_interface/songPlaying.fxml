@@ -14,6 +14,8 @@
             <Label layoutX="489.0" layoutY="20.0" prefHeight="17.0" prefWidth="286.0" text="Title" />
             <Label layoutX="489.0" layoutY="41.0" prefHeight="17.0" prefWidth="286.0" text="Album" />
             <JFXProgressBar layoutX="185.0" layoutY="81.0" prefHeight="10.0" prefWidth="400.0" progress="0.0" />
+            <Label layoutX="139.0" layoutY="74.0" />
+            <Label layoutX="605.0" layoutY="74.0" />
          </children>
       </AnchorPane>
    </children>

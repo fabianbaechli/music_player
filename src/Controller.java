@@ -15,13 +15,13 @@ class Controller implements Subject {
     private ArrayList<Observer> observers = new ArrayList<>();
 
     void handleFolder(File folder) {
-        int[] musicFilesParsed          = {0};
-        int[] musicFiles                = {0};
-        List<MusicFile> songs           = new ArrayList<>();
+        int[] musicFilesParsed = {0};
+        int[] musicFiles = {0};
+        List<MusicFile> songs = new ArrayList<>();
         final MusicFolder[] musicFolder = new MusicFolder[1];
-        String image                    = null;
-        String folderName               = folder.getName();
-        Thread runnable                 = null;
+        String image = null;
+        String folderName = folder.getName();
+        Thread runnable = null;
 
         if (folder.listFiles() != null) {
             // Iterates over the files in the folder
@@ -89,7 +89,7 @@ class Controller implements Subject {
         return (double) tmp / factor;
     }
 
-    private double decimalToTime(double decimalValueInMinutes) {
+    public double decimalToTime(double decimalValueInMinutes) {
         int minutes = (int) decimalValueInMinutes / 60;
         double seconds = (decimalValueInMinutes - minutes) * 0.6;
         while (seconds > 0.6) {
@@ -106,6 +106,20 @@ class Controller implements Subject {
             extension = fileName.substring(i + 1);
         }
         return extension;
+    }
+
+    public float songProgressOnProgressBar(double songPlayed, double songLength) {
+        // minutes
+        int songPlayedSeconds = (int) songPlayed;
+        // seconds (already in time format)
+        double temp = (songPlayed - songPlayedSeconds) * 100;
+        songPlayedSeconds = (songPlayedSeconds * 60) + (int) temp;
+
+        int songLengthSeconds = (int) songPlayed;
+        temp = (songLength - songLengthSeconds) * 100;
+        songLengthSeconds = (songLengthSeconds * 60) + (int) temp;
+
+        return (float)songPlayedSeconds / (float)songLengthSeconds;
     }
 
     public void addObserver(Observer newObserver) {
