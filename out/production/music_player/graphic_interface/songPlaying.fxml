@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
@@ -14,7 +13,6 @@
             <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="17.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="489.0" layoutY="20.0" prefHeight="17.0" prefWidth="286.0" text="Title" />
             <Label layoutX="489.0" layoutY="41.0" prefHeight="17.0" prefWidth="286.0" text="Album" />
-            <JFXButton layoutX="276.0" layoutY="35.0" />
          </children>
       </AnchorPane>
    </children>

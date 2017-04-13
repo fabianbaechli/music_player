@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Controller implements Subject {
-    private Model model = new Model(Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\\user_folders.txt");
+    private Model model = new Model(Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/user_folders.txt");
     private ArrayList<Observer> observers = new ArrayList<>();
 
     void handleFolder(File folder) {

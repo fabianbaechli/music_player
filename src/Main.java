@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,10 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -93,15 +91,28 @@ public class Main extends Application implements ObserverPattern.Observer {
                 StackPane pane = FXMLLoader.load(Main.class.getResource("/graphic_interface/entry.fxml"));
                 AnchorPane anchorPane = (AnchorPane) pane.getChildren().get(0);
                 anchorPane.setLayoutY(scroll);
-                ((AnchorPane) ((ScrollPane) page.getChildren().get(1)).getContent()).getChildren().add(anchorPane);
+
+                BorderPane groundBorderPane = (BorderPane) page.getChildren().get(1);
+                ScrollPane groundScrollPane = (ScrollPane) groundBorderPane.getCenter();
+                groundScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                AnchorPane groundAnchorPane = (AnchorPane) groundScrollPane.getContent();
+                groundAnchorPane.getChildren().add(anchorPane);
+
                 GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
                 ImageView imageView = (ImageView) anchorPane.getChildren().get(0);
-
                 imageView.setImage(new Image(newFolder.getFolderImage()));
+
                 for (MusicFile aMusicFile : newFolder.getFiles()) {
                     Label name = new Label(aMusicFile.getName());
                     Label album = new Label(newFolder.getFolderName());
-                    Label duration = new Label(Double.toString(aMusicFile.getDuration()));
+                    String durationStr = Double.toString(aMusicFile.getDuration());
+                    Label duration = new Label();
+                    // Label duration = new Label(Double.toString(aMusicFile.getDuration()));
+                    if (durationStr.split("\\.")[1].length() == 1) {
+                        duration.setText(durationStr + "0");
+                    } else {
+                        duration.setText(durationStr);
+                    }
 
                     songGrid.add(name, 0, count[0]);
                     songGrid.add(album, 1, count[0]);
@@ -113,9 +124,9 @@ public class Main extends Application implements ObserverPattern.Observer {
                     rowCounter[0] += 3;
                     count[0] += 1;
                 }
-                for (int i = 0; i < songGrid.getChildren().size(); i+= 1) {
-                    ((Label)songGrid.getChildren().get(i)).setPrefWidth(250);
-                    ((Label)songGrid.getChildren().get(i)).setPrefHeight(250);
+                for (int i = 0; i < songGrid.getChildren().size(); i += 1) {
+                    ((Label) songGrid.getChildren().get(i)).setPrefWidth(250);
+                    ((Label) songGrid.getChildren().get(i)).setPrefHeight(250);
 
                     int finalI = i;
                     Runnable t = new Thread(() -> {
@@ -124,6 +135,22 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 if (currentSong != null) {
                                     currentSong.stop();
                                 }
+
+                                try {
+                                    StackPane songPane = FXMLLoader.load(Main.class.getResource("/graphic_interface/songPlaying.fxml"));
+                                    AnchorPane songAnchorPane = (AnchorPane) songPane.getChildren().get(0);
+                                    ImageView songCover = (ImageView) songAnchorPane.getChildren().get(0);
+                                    Label songTitle = (Label) songAnchorPane.getChildren().get(1);
+                                    Label songAlbum = (Label) songAnchorPane.getChildren().get(2);
+                                    songCover.setImage(imageView.getImage());
+                                    songTitle.setText(aMusicFile.getName());
+                                    songAlbum.setText(newFolder.getFolderName());
+                                    groundBorderPane.setBottom(songPane);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                                 currentSong = aMusicFile.getPlayer();
                                 currentSong.play();
                             }
