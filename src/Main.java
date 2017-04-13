@@ -19,7 +19,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 
 public class Main extends Application implements ObserverPattern.Observer {
