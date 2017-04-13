@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-
+import com.jfoenix.controls.*;
 
 public class Main extends Application implements ObserverPattern.Observer {
     /*
@@ -142,6 +141,8 @@ public class Main extends Application implements ObserverPattern.Observer {
                                     ImageView songCover = (ImageView) songAnchorPane.getChildren().get(0);
                                     Label songTitle = (Label) songAnchorPane.getChildren().get(1);
                                     Label songAlbum = (Label) songAnchorPane.getChildren().get(2);
+                                    JFXProgressBar progressBar = (JFXProgressBar) songAnchorPane.getChildren().get(3);
+                                    
                                     songCover.setImage(imageView.getImage());
                                     songTitle.setText(aMusicFile.getName());
                                     songAlbum.setText(newFolder.getFolderName());

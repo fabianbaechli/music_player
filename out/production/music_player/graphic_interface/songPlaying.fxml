@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -13,6 +13,7 @@
             <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="17.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="489.0" layoutY="20.0" prefHeight="17.0" prefWidth="286.0" text="Title" />
             <Label layoutX="489.0" layoutY="41.0" prefHeight="17.0" prefWidth="286.0" text="Album" />
+            <JFXProgressBar layoutX="185.0" layoutY="81.0" prefHeight="10.0" prefWidth="400.0" progress="0.0" />
          </children>
       </AnchorPane>
    </children>
