@@ -7,19 +7,22 @@ import Music.MusicFolder;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import com.jfoenix.controls.*;
 import javafx.util.Duration;
+
+import static javafx.application.Platform.runLater;
 
 public class Main extends Application implements ObserverPattern.Observer {
     private int scroll = 0;
@@ -28,6 +31,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     private Controller controller = new Controller();
     private MediaPlayer currentSong = null;
     private Timeline progressBarTimeline = null;
+    private boolean songPlaying = false;
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -69,6 +73,15 @@ public class Main extends Application implements ObserverPattern.Observer {
             Scene scene = new Scene(page);
 
             primaryStage.setScene(scene);
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode().equals(KeyCode.SPACE)) {
+                    if (songPlaying) {
+                        currentSong.pause();
+                    } else if (currentSong != null && !songPlaying) {
+                        currentSong.play();
+                    }
+                }
+            });
             primaryStage.setTitle("Music Player");
             primaryStage.show();
             page.getChildren().get(0).toFront();
@@ -86,7 +99,7 @@ public class Main extends Application implements ObserverPattern.Observer {
         final int[] count = {1};
         final int[] rowCounter = {3};
         // Appends a new album to the collection
-        Thread thread = new Thread(() -> Platform.runLater(() -> {
+        Thread thread = new Thread(() -> runLater(() -> {
             try {
                 StackPane pane = FXMLLoader.load(Main.class.getResource("/graphic_interface/entry.fxml"));
                 AnchorPane anchorPane = (AnchorPane) pane.getChildren().get(0);
@@ -139,9 +152,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 }
                                 AnchorPane songAnchorPane = null;
                                 ProgressBar progressBar = null;
+                                Button playPauseButton = null;
                                 try {
                                     StackPane songPane = FXMLLoader.load(Main.class.getResource("/graphic_interface/songPlaying.fxml"));
                                     songAnchorPane = (AnchorPane) songPane.getChildren().get(0);
+                                    playPauseButton = ((Button) songAnchorPane.getChildren().get(6));
                                     ImageView songCover = (ImageView) songAnchorPane.getChildren().get(0);
                                     Label songTitle = (Label) songAnchorPane.getChildren().get(1);
                                     Label songAlbum = (Label) songAnchorPane.getChildren().get(2);
@@ -158,15 +173,64 @@ public class Main extends Application implements ObserverPattern.Observer {
 
                                 currentSong = aMusicFile.getPlayer();
                                 currentSong.play();
+                                songPlaying = true;
                                 if (progressBarTimeline != null) {
                                     progressBarTimeline.stop();
                                 }
+
+                                Button finalPlayPauseButton = playPauseButton;
+                                currentSong.setOnPaused(() -> {
+                                    songPlaying = false;
+                                    BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
+                                            "/graphic_interface/play_button.png"),
+                                            null, null, null, new BackgroundSize(59, 59,
+                                            true, true, true,
+                                            true));
+                                    Background newBackground = new Background(newBackgroundImage);
+                                    finalPlayPauseButton.setBackground(newBackground);
+                                });
+
+                                currentSong.setOnPlaying(() -> {
+                                    songPlaying = true;
+                                    BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
+                                            "/graphic_interface/pause_button.png"),
+                                            null, null, null, new BackgroundSize(59, 59,
+                                            true, true, true,
+                                            true));
+                                    Background newBackground = new Background(newBackgroundImage);
+                                    finalPlayPauseButton.setBackground(newBackground);
+                                });
+
+                                playPauseButton.setOnAction(event -> {
+                                    if (songPlaying) {
+                                        currentSong.pause();
+                                        songPlaying = false;
+                                        BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
+                                                "/graphic_interface/play_button.png"),
+                                                null, null, null, new BackgroundSize(59, 59,
+                                                true, true, true,
+                                                true));
+                                        Background newBackground = new Background(newBackgroundImage);
+                                        finalPlayPauseButton.setBackground(newBackground);
+                                    } else {
+                                        currentSong.play();
+                                        songPlaying = true;
+                                        BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
+                                                "/graphic_interface/pause_button.png"),
+                                                null, null, null, new BackgroundSize(59, 59,
+                                                true, true, true,
+                                                true));
+                                        Background newBackground = new Background(newBackgroundImage);
+                                        finalPlayPauseButton.setBackground(newBackground);
+                                    }
+                                });
+
                                 AnchorPane finalSongPane = songAnchorPane;
                                 ProgressBar finalProgressBar = progressBar;
+
                                 progressBarTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                                     double currentSongLength = aMusicFile.getDuration();
                                     double currentSongPosition = controller.decimalToTime(currentSong.getCurrentTime().toMinutes());
-                                    assert finalSongPane != null;
                                     ((Label) finalSongPane.getChildren().get(4)).setText(Double.toString(currentSongPosition));
                                     ((Label) finalSongPane.getChildren().get(5)).setText(Double.toString(currentSongLength));
                                     assert finalProgressBar != null;
