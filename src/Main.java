@@ -74,12 +74,12 @@ public class Main extends Application implements ObserverPattern.Observer {
 
             primaryStage.setScene(scene);
             scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                event.consume();
                 if (event.getCode().equals(KeyCode.SPACE)) {
-                    if (songPlaying) {
+                    if (songPlaying)
                         currentSong.pause();
-                    } else if (currentSong != null && !songPlaying) {
+                    else if (currentSong != null)
                         currentSong.play();
-                    }
                 }
             });
             primaryStage.setTitle("Music Player");
@@ -95,7 +95,6 @@ public class Main extends Application implements ObserverPattern.Observer {
     }
 
     public void update(MusicFolder newFolder) {
-        System.out.println("got folder :" + newFolder.describeFolder());
         final int[] count = {1};
         final int[] rowCounter = {3};
         // Appends a new album to the collection
@@ -180,6 +179,7 @@ public class Main extends Application implements ObserverPattern.Observer {
 
                                 Button finalPlayPauseButton = playPauseButton;
                                 currentSong.setOnPaused(() -> {
+                                    System.out.println("pause");
                                     songPlaying = false;
                                     BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
                                             "/graphic_interface/play_button.png"),
@@ -191,6 +191,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 });
 
                                 currentSong.setOnPlaying(() -> {
+                                    System.out.println("play");
                                     songPlaying = true;
                                     BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
                                             "/graphic_interface/pause_button.png"),
@@ -212,12 +213,20 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 ProgressBar finalProgressBar = progressBar;
 
                                 progressBarTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                                    double currentSongLength = aMusicFile.getDuration();
-                                    double currentSongPosition = controller.decimalToTime(currentSong.getCurrentTime().toMinutes());
-                                    ((Label) finalSongPane.getChildren().get(4)).setText(Double.toString(currentSongPosition));
-                                    ((Label) finalSongPane.getChildren().get(5)).setText(Double.toString(currentSongLength));
+                                    String currentSongLength = Double.toString(aMusicFile.getDuration());
+                                    if (currentSongLength.split("\\.")[1].length() == 1)
+                                        currentSongLength += "0";
+
+                                    String currentSongPosition = Double.toString(controller.decimalToTime(currentSong.getCurrentTime().toMinutes()));
+                                    if (currentSongPosition.split("\\.")[1].length() == 1)
+                                        currentSongPosition += "0";
+
+                                    ((Label) finalSongPane.getChildren().get(4)).setText(currentSongPosition);
+                                    ((Label) finalSongPane.getChildren().get(5)).setText(currentSongLength);
                                     assert finalProgressBar != null;
-                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(currentSongPosition, currentSongLength));
+                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(
+                                            Double.parseDouble(currentSongPosition),
+                                            Double.parseDouble(currentSongLength)));
                                 }));
                                 progressBarTimeline.setCycleCount(-1);
                                 progressBarTimeline.play();
