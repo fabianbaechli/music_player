@@ -240,6 +240,14 @@ public class Main extends Application implements ObserverPattern.Observer {
                                     finalProgressBar.setProgress(pos);
                                 });
                                 progressBar.setOnMouseReleased(event -> progressBarTimeline.play());
+                                progressBar.setOnMouseClicked(event -> {
+                                    Double pos = event.getX() / finalProgressBar.getWidth();
+                                    if (pos < 0)
+                                        pos = 0.0;
+                                    else if (pos > 1)
+                                        pos = 1.0;
+                                    currentSong.seek(new Duration(pos * currentSong.getMedia().getDuration().toMillis()));
+                                });
                             }
                         }
                     });
