@@ -146,9 +146,9 @@ public class Main extends Application implements ObserverPattern.Observer {
                     Runnable t = new Thread(() -> {
                         for (MusicFile aMusicFile : newFolder.getFiles()) {
                             if (aMusicFile.getPath().equals(songGrid.getChildren().get(finalI).getId())) {
-                                if (currentSong != null) {
+                                if (currentSong != null)
                                     currentSong.stop();
-                                }
+
                                 AnchorPane songAnchorPane = null;
                                 ProgressBar progressBar = null;
                                 Button playPauseButton = null;
@@ -179,7 +179,6 @@ public class Main extends Application implements ObserverPattern.Observer {
 
                                 Button finalPlayPauseButton = playPauseButton;
                                 currentSong.setOnPaused(() -> {
-                                    System.out.println("pause");
                                     songPlaying = false;
                                     BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
                                             "/graphic_interface/play_button.png"),
@@ -187,11 +186,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                                             true, true, true,
                                             true));
                                     Background newBackground = new Background(newBackgroundImage);
+                                    assert finalPlayPauseButton != null;
                                     finalPlayPauseButton.setBackground(newBackground);
                                 });
 
                                 currentSong.setOnPlaying(() -> {
-                                    System.out.println("play");
                                     songPlaying = true;
                                     BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
                                             "/graphic_interface/pause_button.png"),
@@ -199,9 +198,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                                             true, true, true,
                                             true));
                                     Background newBackground = new Background(newBackgroundImage);
+                                    assert finalPlayPauseButton != null;
                                     finalPlayPauseButton.setBackground(newBackground);
                                 });
 
+                                assert playPauseButton != null;
                                 playPauseButton.setOnAction(event -> {
                                     if (songPlaying)
                                         currentSong.pause();
@@ -230,6 +231,18 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 }));
                                 progressBarTimeline.setCycleCount(-1);
                                 progressBarTimeline.play();
+
+                                progressBar.setOnMouseDragged(event -> {
+                                    progressBarTimeline.stop();
+                                    Double pos = event.getX() / finalProgressBar.getWidth();
+                                    if (pos < 0)
+                                        pos = 0.0;
+                                    else if (pos > 1)
+                                        pos = 1.0;
+                                    currentSong.seek(new Duration(pos * currentSong.getMedia().getDuration().toMillis()));
+                                    finalProgressBar.setProgress(pos);
+                                });
+                                finalProgressBar.setOnMouseDragReleased(event -> System.out.println("boiboi"));
                             }
                         }
                     });
