@@ -202,27 +202,10 @@ public class Main extends Application implements ObserverPattern.Observer {
                                 });
 
                                 playPauseButton.setOnAction(event -> {
-                                    if (songPlaying) {
+                                    if (songPlaying)
                                         currentSong.pause();
-                                        songPlaying = false;
-                                        BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
-                                                "/graphic_interface/play_button.png"),
-                                                null, null, null, new BackgroundSize(59, 59,
-                                                true, true, true,
-                                                true));
-                                        Background newBackground = new Background(newBackgroundImage);
-                                        finalPlayPauseButton.setBackground(newBackground);
-                                    } else {
+                                    else
                                         currentSong.play();
-                                        songPlaying = true;
-                                        BackgroundImage newBackgroundImage = new BackgroundImage(new Image(
-                                                "/graphic_interface/pause_button.png"),
-                                                null, null, null, new BackgroundSize(59, 59,
-                                                true, true, true,
-                                                true));
-                                        Background newBackground = new Background(newBackgroundImage);
-                                        finalPlayPauseButton.setBackground(newBackground);
-                                    }
                                 });
 
                                 AnchorPane finalSongPane = songAnchorPane;
