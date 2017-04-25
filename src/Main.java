@@ -225,13 +225,10 @@ public class Main extends Application implements ObserverPattern.Observer {
                                     ((Label) finalSongPane.getChildren().get(4)).setText(currentSongPosition);
                                     ((Label) finalSongPane.getChildren().get(5)).setText(currentSongLength);
                                     assert finalProgressBar != null;
-                                    finalProgressBar.setProgress(controller.songProgressOnProgressBar(
-                                            Double.parseDouble(currentSongPosition),
-                                            Double.parseDouble(currentSongLength)));
+                                    finalProgressBar.setProgress(currentSong.getCurrentTime().toMillis() / currentSong.getMedia().getDuration().toMillis());
                                 }));
                                 progressBarTimeline.setCycleCount(-1);
                                 progressBarTimeline.play();
-
                                 progressBar.setOnMouseDragged(event -> {
                                     progressBarTimeline.stop();
                                     Double pos = event.getX() / finalProgressBar.getWidth();
@@ -242,7 +239,7 @@ public class Main extends Application implements ObserverPattern.Observer {
                                     currentSong.seek(new Duration(pos * currentSong.getMedia().getDuration().toMillis()));
                                     finalProgressBar.setProgress(pos);
                                 });
-                                finalProgressBar.setOnMouseDragReleased(event -> System.out.println("boiboi"));
+                                progressBar.setOnMouseReleased(event -> progressBarTimeline.play());
                             }
                         }
                     });

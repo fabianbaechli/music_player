@@ -109,20 +109,6 @@ class Controller implements Subject {
         return extension;
     }
 
-    float songProgressOnProgressBar(double songPlayed, double songLength) {
-        // minutes
-        int songPlayedSeconds = (int) songPlayed;
-        // seconds (already in time format)
-        double temp = (songPlayed - songPlayedSeconds) * 100;
-        songPlayedSeconds = (songPlayedSeconds * 60) + (int) temp;
-
-        int songLengthSeconds = (int) songPlayed;
-        temp = (songLength - songLengthSeconds) * 100;
-        songLengthSeconds = (songLengthSeconds * 60) + (int) temp;
-
-        return (float) songPlayedSeconds / (float) songLengthSeconds;
-    }
-
     public void addObserver(Observer newObserver) {
         observers.add(newObserver);
     }
