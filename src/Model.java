@@ -6,7 +6,7 @@ import java.nio.file.StandardOpenOption;
 class Model {
     private String fileLocation;
 
-    public Model(String fileLocation) {
+    Model(String fileLocation) {
         this.fileLocation = fileLocation;
     }
 

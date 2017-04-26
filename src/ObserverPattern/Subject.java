@@ -3,9 +3,9 @@ package ObserverPattern;
 import Music.MusicFolder;
 
 public interface Subject {
-    public void addObserver(Observer o);
+    void addObserver(Observer o);
 
-    public void unregisterObserver(Observer o);
+    void unregisterObserver(Observer o);
 
-    public void notifyObserver(MusicFolder musicFolder);
+    void notifyObserver(MusicFolder musicFolder);
 }

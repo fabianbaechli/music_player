@@ -15,10 +15,6 @@ public class MusicFile {
         this.path = path;
     }
 
-    public void setDuration(double duration) {
-        this.duration = duration;
-    }
-
     public double getDuration() {
         return duration;
     }
