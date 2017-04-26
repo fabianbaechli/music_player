@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Controller.Controller;
 import Music.MusicFile;
 import Music.MusicFolder;
 import javafx.animation.KeyFrame;

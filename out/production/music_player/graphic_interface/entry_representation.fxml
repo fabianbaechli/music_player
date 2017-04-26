@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
@@ -15,10 +16,13 @@
                <BorderPane.margin>
                   <Insets left="10.0" />
                </BorderPane.margin>
+               <font>
+                  <Font name="Roboto Light" size="13.0" />
+               </font>
             </Label>
          </left>
          <right>
-            <JFXButton buttonType="RAISED" ripplerFill="WHITE" style="-fx-background-color: red;" text="Delete" textFill="WHITE" BorderPane.alignment="CENTER">
+            <JFXButton buttonType="RAISED" ripplerFill="WHITE" style="-fx-background-color: #F44336;" text="Delete" textFill="WHITE" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets right="10.0" />
                </BorderPane.margin>

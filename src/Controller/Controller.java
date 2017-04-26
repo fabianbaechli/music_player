@@ -1,20 +1,23 @@
+package Controller;
+
 import Music.MusicFile;
 import Music.MusicFolder;
 import ObserverPattern.Observer;
 import ObserverPattern.Subject;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import Model.*;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-class Controller implements Subject {
+public class Controller implements Subject {
     private Model model = new Model(Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/user_folders.txt");
     private ArrayList<Observer> observers = new ArrayList<>();
 
-    void handleFolder(File folder) {
+    public void handleFolder(File folder) {
         int[] musicFilesParsed = {0};
         int[] musicFiles = {0};
         List<MusicFile> songs = new ArrayList<>();
@@ -70,17 +73,25 @@ class Controller implements Subject {
         }
     }
 
-    void writeToUserFolder(String text) {
+    public void writeToUserFolder(String text) {
         model.writeToFile(text);
     }
 
-    void getContentFromUserFile() {
+    public void getContentFromUserFile() {
         String[] userFileContent = model.readUserFileContent().split("\n");
         for (String aMusicFolder : userFileContent) {
             System.out.println("parsing folder " + aMusicFolder + " from user config file");
             File file = new File(aMusicFolder);
             handleFolder(file);
         }
+    }
+
+    public String[] getLocationsFromUserFile() {
+        return model.readUserFileContent().split("\n");
+    }
+
+    public void deleteLineInUserFile(String location) {
+        model.deleteLineFromUserFile(location);
     }
 
     private double round(double value) {
@@ -90,7 +101,7 @@ class Controller implements Subject {
         return (double) tmp / factor;
     }
 
-    double decimalToTime(double decimalValueInMinutes) {
+    public double decimalToTime(double decimalValueInMinutes) {
         int minutes = (int) decimalValueInMinutes / 60;
         double seconds = (decimalValueInMinutes - minutes) * 0.6;
         while (seconds > 0.6) {
