@@ -9,6 +9,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -46,7 +47,10 @@ public class Main extends Application implements ObserverPattern.Observer {
             final Menu helpMenu = new Menu("Help");
 
             MenuItem addFolderContent = new MenuItem();
+            MenuItem changeConfig = new MenuItem();
             addFolderContent.setText("Add Folder Content");
+            changeConfig.setText("Change Loaded Folders");
+
             addFolderContent.setOnAction((ActionEvent event) -> {
                 // Displays a dialog, in which a folder can be chosen
                 DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -59,7 +63,21 @@ public class Main extends Application implements ObserverPattern.Observer {
                 }
             });
 
+            changeConfig.setOnAction(event -> {
+                Parent root;
+                try {
+                    root = FXMLLoader.load(Main.class.getResource("/graphic_interface/change_config.fxml"));
+                    Stage stage = new Stage();
+                    stage.setTitle("Change Config");
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
             fileMenu.getItems().addAll(addFolderContent);
+            fileMenu.getItems().addAll(changeConfig);
             if (os != null && os.startsWith("Mac"))
                 menuBar.useSystemMenuBarProperty().set(true);
 

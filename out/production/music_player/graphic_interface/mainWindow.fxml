@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -10,7 +11,7 @@
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
          <center>
-            <ScrollPane fitToHeight="true" prefHeight="500.0" prefWidth="800.0" style="-fx-border-color: #FFFFFF;" stylesheets="@scrollbarSkin.css" BorderPane.alignment="CENTER">
+            <ScrollPane fitToHeight="true" prefHeight="589.0" prefWidth="900.0" style="-fx-border-color: #FFFFFF;" stylesheets="@scrollbarSkin.css" BorderPane.alignment="CENTER">
                <content>
                   <AnchorPane />
                </content>
