@@ -8,4 +8,5 @@ public interface Subject {
     void unregisterObserver(Observer o);
 
     void notifyObserver(MusicFolder musicFolder);
+    void delete(String folder);
 }

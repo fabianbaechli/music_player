@@ -80,7 +80,6 @@ public class Controller implements Subject {
     public void getContentFromUserFile() {
         String[] userFileContent = model.readUserFileContent().split("\n");
         for (String aMusicFolder : userFileContent) {
-            System.out.println("parsing folder " + aMusicFolder + " from user config file");
             File file = new File(aMusicFolder);
             handleFolder(file);
         }
@@ -92,6 +91,7 @@ public class Controller implements Subject {
 
     public void deleteLineInUserFile(String location) {
         model.deleteLineFromUserFile(location);
+        delete(location);
     }
 
     private double round(double value) {
@@ -134,6 +134,13 @@ public class Controller implements Subject {
     public void notifyObserver(MusicFolder musicFolder) {
         for (Observer observerToNotify : observers) {
             observerToNotify.update(musicFolder);
+        }
+    }
+
+    @Override
+    public void delete(String folder) {
+        for (Observer observerToNotify : observers) {
+            observerToNotify.delete(folder);
         }
     }
 }

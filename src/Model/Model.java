@@ -32,6 +32,7 @@ public class Model {
     private void createFile() {
         File file = new File(fileLocation);
         try {
+            //noinspection ResultOfMethodCallIgnored
             file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,12 +46,11 @@ public class Model {
                 ArrayList<String> lines = new ArrayList<>(Arrays.asList(readUserFileContent().split("\n")));
                 for (int i = 0; i < lines.size(); i++) {
                     if (lines.get(i).equals(lineName)) {
-                        System.out.println("found it: " + lines.get(i));
                         lines.remove(i);
-                        createFile();
+                        Files.delete(Paths.get(fileLocation));
                         for (Object line : lines) {
-                            System.out.println("wrote " + line.toString());
-                            writeToFile(line.toString());
+                            if (!line.equals(""))
+                                writeToFile(line.toString());
                         }
                     }
                 }
@@ -78,10 +78,11 @@ public class Model {
                 temp = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("file not created");
         }
         try {
-            bufferedReader.close();
+            if (bufferedReader != null)
+                bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

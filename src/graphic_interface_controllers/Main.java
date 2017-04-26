@@ -1,3 +1,5 @@
+package graphic_interface_controllers;
+
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +32,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     private int scroll = 0;
     private static final String os = System.getProperty("os.name");
     private static StackPane page;
-    private Controller controller = new Controller();
+    static Controller controller = new Controller();
     private MediaPlayer currentSong = null;
     private Timeline progressBarTimeline = null;
     private boolean songPlaying = false;
@@ -114,6 +116,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     }
 
     public void update(MusicFolder newFolder) {
+        System.out.println("parsing folder " + newFolder.getFolderName());
         final int[] count = {1};
         final int[] rowCounter = {3};
         // Appends a new album to the collection
@@ -279,5 +282,32 @@ public class Main extends Application implements ObserverPattern.Observer {
         }));
         thread.setDaemon(true);
         thread.start();
+    }
+
+    @Override
+    public void delete(String folder) {
+        BorderPane groundBorderPane = (BorderPane) page.getChildren().get(1);
+        ScrollPane groundScrollPane = (ScrollPane) groundBorderPane.getCenter();
+        AnchorPane groundAnchorPane = (AnchorPane) groundScrollPane.getContent();
+
+        for (int i = 0; i < groundAnchorPane.getChildren().size(); i++) {
+            AnchorPane anchorPane = (AnchorPane) groundAnchorPane.getChildren().get(i);
+            GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
+            String folderName = ((Label) songGrid.getChildren().get(4)).getText();
+            if (folder.contains(folderName)) {
+                groundAnchorPane.getChildren().remove(anchorPane);
+                int count = 0;
+                for (int y = 0; y < songGrid.getChildren().size() / 3; y++) {
+                    count += 1;
+                }
+                int decrementDifference = (count * 21) + 40;
+                for (; i < groundAnchorPane.getChildren().size(); i++) {
+
+                    AnchorPane newAnchorPane = (AnchorPane) groundAnchorPane.getChildren().get(i);
+                    newAnchorPane.setLayoutY(newAnchorPane.getLayoutY() - decrementDifference);
+                }
+                return;
+            }
+        }
     }
 }
