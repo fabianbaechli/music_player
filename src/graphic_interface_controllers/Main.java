@@ -36,6 +36,7 @@ public class Main extends Application implements ObserverPattern.Observer {
     private MediaPlayer currentSong = null;
     private Timeline progressBarTimeline = null;
     private boolean songPlaying = false;
+    private boolean labelRemoved = false;
 
     public static void main(String[] args) {
         Application.launch(Main.class, (java.lang.String[]) null);
@@ -129,6 +130,11 @@ public class Main extends Application implements ObserverPattern.Observer {
                 BorderPane groundBorderPane = (BorderPane) page.getChildren().get(1);
                 ScrollPane groundScrollPane = (ScrollPane) groundBorderPane.getCenter();
                 AnchorPane groundAnchorPane = (AnchorPane) groundScrollPane.getContent();
+                if (!labelRemoved) {
+                    groundAnchorPane.getChildren().get(0).setVisible(false);
+                    labelRemoved = true;
+                }
+
                 groundAnchorPane.getChildren().add(anchorPane);
 
                 GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
@@ -290,7 +296,7 @@ public class Main extends Application implements ObserverPattern.Observer {
         ScrollPane groundScrollPane = (ScrollPane) groundBorderPane.getCenter();
         AnchorPane groundAnchorPane = (AnchorPane) groundScrollPane.getContent();
 
-        for (int i = 0; i < groundAnchorPane.getChildren().size(); i++) {
+        for (int i = 1; i < groundAnchorPane.getChildren().size(); i++) {
             AnchorPane anchorPane = (AnchorPane) groundAnchorPane.getChildren().get(i);
             GridPane songGrid = (GridPane) anchorPane.getChildren().get(1);
             String folderName = ((Label) songGrid.getChildren().get(4)).getText();
@@ -302,10 +308,14 @@ public class Main extends Application implements ObserverPattern.Observer {
                 }
                 int decrementDifference = (count * 21) + 40;
                 for (; i < groundAnchorPane.getChildren().size(); i++) {
-
                     AnchorPane newAnchorPane = (AnchorPane) groundAnchorPane.getChildren().get(i);
                     newAnchorPane.setLayoutY(newAnchorPane.getLayoutY() - decrementDifference);
                 }
+                if (groundAnchorPane.getChildren().size() == 1) {
+                    groundAnchorPane.getChildren().get(0).setVisible(true);
+                    labelRemoved = false;
+                }
+                scroll -= decrementDifference;
                 return;
             }
         }

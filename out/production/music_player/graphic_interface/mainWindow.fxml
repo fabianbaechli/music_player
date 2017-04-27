@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -7,13 +8,20 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #FFFFFF;" stylesheets="@backgroundSkin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="830.0" style="-fx-background-color: #FFFFFF;" stylesheets="@backgroundSkin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
          <center>
-            <ScrollPane fitToHeight="true" prefHeight="589.0" prefWidth="900.0" style="-fx-border-color: #FFFFFF;" stylesheets="@scrollbarSkin.css" BorderPane.alignment="CENTER">
+            <ScrollPane fitToHeight="true" style="-fx-border-color: #FFFFFF;" stylesheets="@scrollbarSkin.css" BorderPane.alignment="CENTER">
                <content>
-                  <AnchorPane />
+                  <AnchorPane>
+                     <children>
+                        <Label alignment="CENTER" layoutX="85.0" layoutY="258.0" text="To add music to your library, press &quot;File&quot; -&gt; &quot;Add Content From Folder&quot;" textAlignment="CENTER">
+                           <font>
+                              <Font name="Roboto Light" size="22.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
                </content>
             </ScrollPane>
          </center>
