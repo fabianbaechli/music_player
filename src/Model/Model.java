@@ -32,7 +32,7 @@ public class Model {
     private void createFile() {
         File file = new File(fileLocation);
         try {
-            //noinspection ResultOfMethodCallIgnored
+            file.getParentFile().mkdirs();
             file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();

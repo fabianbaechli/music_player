@@ -52,7 +52,7 @@ public class Main extends Application implements ObserverPattern.Observer {
 
             MenuItem addFolderContent = new MenuItem();
             MenuItem changeConfig = new MenuItem();
-            addFolderContent.setText("Add Folder Content");
+            addFolderContent.setText("Add Content From Folder");
             changeConfig.setText("Change Loaded Folders");
 
             addFolderContent.setOnAction((ActionEvent event) -> {
